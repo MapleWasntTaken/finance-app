@@ -9,6 +9,7 @@ public class homeController {
     @RequestMapping("/")
     public String index(){
         return "index.html";
+        //return "fart";
     }
 
 }   
