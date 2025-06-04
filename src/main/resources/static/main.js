@@ -5,7 +5,10 @@ signupbutton.addEventListener("click",() => {
 const askForCurrentRole = document.querySelector(".askForCurrentRole");
 askForCurrentRole.addEventListener("click",() => {
     let y = document.createElement("p");
-    let x = fetch("/getUserRole").then(response => response.json()).then(data => y.innerText = data);
+    fetch("/getUserRole",{
+        method:"GET"
+    }).then(response => response.text())
+    .then(data => {y.innerText = data});
     document.body.appendChild(y);
 });
 
@@ -16,13 +19,16 @@ fetch("/csrf-token",{credentials:"include"})
     window.csrfToken = data.token;
     window.csrfHeader = data.headerName;
 
+
 });
 //////////////////////////////////////////////////////////////
 
 
 
 const logoutbtn = document.querySelector(".logoutbutton");
-
+logoutbtn.addEventListener("click",() => {
+    location.href = "/logout";
+});
 
 
 const testbtn = document.querySelector(".test");
@@ -43,7 +49,7 @@ testbtn.addEventListener("click",() => {
     .then(response => response.text())
     .then(data => console.log("Server response:", data))
     .catch(error => console.error("Error:", error));
-    let x = fetch("/test",{
+    fetch("/test",{
         method:"GET",
         credentials:"include",
         headers: {
