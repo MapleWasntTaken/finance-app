@@ -17,24 +17,12 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 public class testingapisec {
     
-    private List<user> users = new ArrayList<>(List.of(
+    final private List<user> users = new ArrayList<>(List.of(
             new user(1,"josh"),
             new user(2,"terrance")
 
     ));
 
-    /**@GetMapping("/")
-    public String home(){
-        return ("<h1>Welcome</h1>");
-    }**/
-    @GetMapping("/user")
-    public String user(){
-        return ("<h1>Welcome user or admin</h1>");
-    }
-    @GetMapping("/admin")
-    public String admin(){
-        return ("<h1>Welcome admin</h1>");
-    }
     @GetMapping("/getUserRole")
     public String getCurrentUserRoles(Authentication authentication) {
         String x =  authentication.getAuthorities().stream()
@@ -52,11 +40,10 @@ public class testingapisec {
         this.users.add(userr);
         return "ok";
     }
+
+
     @GetMapping("/csrf-token")
     public CsrfToken getCsrfToken(HttpServletRequest request){
-
-        System.out.println(request.getAttribute("_csrf"));
-
         return (CsrfToken) request.getAttribute("_csrf");
     }
 
