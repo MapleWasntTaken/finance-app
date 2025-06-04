@@ -5,6 +5,52 @@ signupbutton.addEventListener("click",() => {
 const askForCurrentRole = document.querySelector(".askForCurrentRole");
 askForCurrentRole.addEventListener("click",() => {
     let y = document.createElement("p");
-    let x = fetch("/getUserRole").then(response => response.text()).then(data => y.innerText = data);
+    let x = fetch("/getUserRole").then(response => response.json()).then(data => y.innerText = data);
     document.body.appendChild(y);
+});
+
+//This is the function to call and store csrf in window memory
+fetch("/csrf-token",{credentials:"include"})
+.then(response => response.json())
+.then(data => {
+    window.csrfToken = data.token;
+    window.csrfHeader = data.headerName;
+
+});
+//////////////////////////////////////////////////////////////
+
+
+
+const logoutbtn = document.querySelector(".logoutbutton");
+
+
+
+const testbtn = document.querySelector(".test");
+testbtn.addEventListener("click",() => {
+    const loginData = {
+         id: "5",
+         name: "fart"
+    };
+    fetch("/test", {
+        method: "POST",
+        credentials:"include",
+        headers: {
+            "Content-Type": "application/json",
+            [window.csrfHeader]: window.csrfToken
+        },
+        body: JSON.stringify(loginData)
+    })
+    .then(response => response.text())
+    .then(data => console.log("Server response:", data))
+    .catch(error => console.error("Error:", error));
+    let x = fetch("/test",{
+        method:"GET",
+        credentials:"include",
+        headers: {
+            "Content-Type": "application/json",
+            [window.csrfHeader]: window.csrfToken
+        }
+    }).then(response =>{return response.json();})
+    .then(data =>{console.log(data)});
+    
 });
