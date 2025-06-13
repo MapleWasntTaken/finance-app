@@ -25,6 +25,9 @@ public class testingapisec {
 
     @GetMapping("/getUserRole")
     public String getCurrentUserRoles(Authentication authentication) {
+        if(authentication==null){
+            return "Not Signed in";
+        }
         String x =  authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)  
                 .collect(Collectors.toList()).get(0);

@@ -21,13 +21,24 @@ fetch("/csrf-token",{credentials:"include"})
 
 
 });
+
 //////////////////////////////////////////////////////////////
 
 
 
 const logoutbtn = document.querySelector(".logoutbutton");
 logoutbtn.addEventListener("click",() => {
-    location.href = "/logout";
+    fetch("/logout", {
+        method: "POST",
+        credentials: "include",
+        headers:{
+            [window.csrfHeader]:window.csrfToken
+        }
+    }).then(res => {
+    if (res.ok) {
+        window.location.href = "/login?logout";
+    }
+    });
 });
 
 

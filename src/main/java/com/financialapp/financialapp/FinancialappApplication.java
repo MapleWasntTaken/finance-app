@@ -1,5 +1,7 @@
 package com.financialapp.financialapp;
 
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,8 +10,8 @@ public class FinancialappApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FinancialappApplication.class, args);
-		// THis is the actual start of making any code at all i assume it wont just immediately call the api
 
 	}
+
 
 }
