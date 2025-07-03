@@ -1,5 +1,6 @@
 package com.financialapp.financialapp;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +33,10 @@ public class loginController {
     public ResponseEntity<String> signup(@RequestBody SignupRequest data) {
         String email = data.email;
         String password = data.password;
-        System.out.println(email);
-        System.out.println(password);
 
         if(userRepository.findByEmail(email).isPresent()){return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");}
         //add password logic here
         else{
-            System.out.println("Here\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             ApplicationUser u = new ApplicationUser();
             u.setEmail(email);
             u.setRole("ROLE_USER");
@@ -48,6 +46,7 @@ public class loginController {
 
         }
     }
+   
 
     public static class SignupRequest {
         private String email;
@@ -60,5 +59,5 @@ public class loginController {
         public void setPassword(String password) { this.password = password; }
     }
 
-    
+
 }

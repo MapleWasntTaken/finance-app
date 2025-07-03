@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
@@ -14,6 +15,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration{
 
 
+
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
 
     @Bean
     public PasswordEncoder PasswordEncoder(){
@@ -30,7 +36,7 @@ public class SecurityConfiguration{
             http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/","/getUserRole","/test","/csrf-token","/login","/login.html","/index.html","/login.js","/main.js","/signup","/signup.html","/signup.js").permitAll()
-                .requestMatchers("/user**").hasAnyRole("USER","ADMIN")
+                .requestMatchers("/**","/api/plaid/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers("/admin**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 

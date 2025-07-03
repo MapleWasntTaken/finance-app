@@ -1,8 +1,10 @@
 package com.financialapp.financialapp;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,11 +12,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +38,12 @@ public class ApplicationUser implements UserDetails{
 
     @Column(name = "user_role")
     private String role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<PlaidItem> plaidItems = new ArrayList<>();
+
+
+    
 
 
     public void setRole(String foo){
@@ -56,7 +66,15 @@ public class ApplicationUser implements UserDetails{
         this.userId = userId;
     }
 
+    public void addPlaidItem(PlaidItem plaidItem){
+        this.plaidItems.add(plaidItem);
+        plaidItem.setUser(this);
+    }
 
+    public void removePlaidItem(PlaidItem plaidItem){
+        this.plaidItems.remove(plaidItem);
+        plaidItem.setUser(null);
+    }
     public String getEmail() {
         return email;
     }
@@ -77,6 +95,11 @@ public class ApplicationUser implements UserDetails{
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<PlaidItem> getPlaidItems() {
+        return plaidItems;
+    }
+
 
 
 

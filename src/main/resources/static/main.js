@@ -44,30 +44,73 @@ logoutbtn.addEventListener("click",() => {
 
 const testbtn = document.querySelector(".test");
 testbtn.addEventListener("click",() => {
-    const loginData = {
-         id: "5",
-         name: "fart"
-    };
+
     fetch("/test", {
         method: "POST",
         credentials:"include",
         headers: {
             "Content-Type": "application/json",
             [window.csrfHeader]: window.csrfToken
-        },
-        body: JSON.stringify(loginData)
+        }
     })
-    .then(response => response.text())
-    .then(data => console.log("Server response:", data))
-    .catch(error => console.error("Error:", error));
-    fetch("/test",{
-        method:"GET",
+    
+});
+
+const linkbtn = document.querySelector(".institutionlink");
+linkbtn.addEventListener("click",()=>{
+    fetch("/api/plaid/create-link-token",{
+        method:"POST",
         credentials:"include",
         headers: {
             "Content-Type": "application/json",
             [window.csrfHeader]: window.csrfToken
         }
-    }).then(response =>{return response.json();})
-    .then(data =>{console.log(data)});
-    
-});
+    })
+    .then(res => res.json())
+    .then(data =>{
+        const linkToken = data.link_token;
+
+        const handler = Plaid.create({
+        token: linkToken,
+        onSuccess: function(public_token, metadata) {
+            // ⬇️ Step 2: Send this public_token to your backend
+            fetch("/api/plaid/exchange-public-token", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",[window.csrfHeader]: window.csrfToken },
+                body: JSON.stringify({ public_token,
+                    institution_id: metadata.institution?.institution_id,
+                    institution_name: metadata.institution?.name
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Access token exchange response:", data);
+            });
+        },
+        onExit: function(err, metadata) {
+            console.warn("User exited Plaid Link", err, metadata);
+        }
+        });
+
+        handler.open();
+
+    });
+
+})
+
+const transbtn = document.querySelector(".transgrab");
+transbtn.addEventListener("click",()=>{
+
+    fetch("/api/plaid/refresh-transactions",{
+        method:"POST",
+        credentials:"include",
+        headers: {
+            "Content-Type": "application/json",
+            [window.csrfHeader]: window.csrfToken
+        }
+    })
+    .then(res => res.json())
+    .then(data =>{
+        console.log(data);
+    })
+})
